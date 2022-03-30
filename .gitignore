@@ -1,6 +1,7 @@
 .vagrant
 Vagrantfile
 iaac.sh
+labuser.pem
 
 # Local .terraform directories
 **/.terraform/*

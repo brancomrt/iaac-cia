@@ -67,42 +67,43 @@ resource "aws_route_table" "rtb_pub_lab01" {
   }
 }
 
-resource "aws_route_table" "rtb_priv_lab01" {
-  vpc_id = aws_vpc.vpc_lab01.id
+#resource "aws_route_table" "rtb_priv_lab01" {
+#  vpc_id = aws_vpc.vpc_lab01.id
+#
+#  route {
+#        cidr_block = "0.0.0.0/0"
+#        gateway_id = aws_nat_gateway.nat_lab01.id
+#      }  
+#
+#  tags = {
+#    Name = "rtb_priv_lab01"
+#  }
+#}
 
-  route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = aws_nat_gateway.nat_lab01.id
-      }  
+#resource "aws_subnet" "subnet_private_1a" {
+#  vpc_id                = aws_vpc.vpc_lab01.id
+#  cidr_block            = "10.0.103.0/24"
+#  availability_zone_id     = data.aws_availability_zones.az-us-east-1a.zone_ids[0]
+#
+#  tags = {
+#    Name = "subnet_private_1a"
+#  }
+#}
 
-  tags = {
-    Name = "rtb_priv_lab01"
-  }
-}
+#resource "aws_subnet" "subnet_private_1b" {
+#  vpc_id                = aws_vpc.vpc_lab01.id
+#  cidr_block            = "10.0.104.0/24"
+#  availability_zone_id     = data.aws_availability_zones.az-us-east-1b.zone_ids[0]
+#
+#  tags = {
+#    Name = "subnet_private_1b"
+#  }
+#}
 
-resource "aws_subnet" "subnet_private_1a" {
-  vpc_id                = aws_vpc.vpc_lab01.id
-  cidr_block            = "10.0.100.0/24"
-  availability_zone_id     = data.aws_availability_zones.az1a.zone_ids[0]
-
-  tags = {
-    Name = "subnet_private_1a"
-  }
-}
-
-resource "aws_subnet" "subnet_private_1b" {
-  vpc_id                = aws_vpc.vpc_lab01.id
-  cidr_block            = "10.0.101.0/24"
-  availability_zone_id     = data.aws_availability_zones.az1b.zone_ids[0]
-
-  tags = {
-    Name = "subnet_private_1b"
-  }
-}
 resource "aws_subnet" "subnet_public_1a" {
   vpc_id                = aws_vpc.vpc_lab01.id
-  cidr_block            = "10.0.102.0/24"
-  availability_zone_id     = data.aws_availability_zones.az1a.zone_ids[0]
+  cidr_block            = "10.0.101.0/24"
+  availability_zone_id     = data.aws_availability_zones.az-us-east-1a.zone_ids[0]
 
   tags = {
     Name = "subnet_public_1a"
@@ -110,8 +111,8 @@ resource "aws_subnet" "subnet_public_1a" {
 }
 resource "aws_subnet" "subnet_public_1b" {
   vpc_id                = aws_vpc.vpc_lab01.id
-  cidr_block            = "10.0.103.0/24"
-  availability_zone_id     = data.aws_availability_zones.az1b.zone_ids[0]
+  cidr_block            = "10.0.102.0/24"
+  availability_zone_id     = data.aws_availability_zones.az-us-east-1b.zone_ids[0]
 
   tags = {
     Name = "subnet_public_1b"
@@ -128,22 +129,19 @@ resource "aws_route_table_association" "pub1b_lab01" {
   route_table_id = aws_route_table.rtb_pub_lab01.id
 }
 
-resource "aws_route_table_association" "priv1a_lab01" {
-  subnet_id      = aws_subnet.subnet_private_1a.id
-  route_table_id = aws_route_table.rtb_priv_lab01.id
-}
+#resource "aws_route_table_association" "priv1a_lab01" {
+#  subnet_id      = aws_subnet.subnet_private_1a.id
+#  route_table_id = aws_route_table.rtb_priv_lab01.id
+#}
 
-resource "aws_route_table_association" "priv1b_lab01" {
-  subnet_id      = aws_subnet.subnet_private_1b.id
-  route_table_id = aws_route_table.rtb_priv_lab01.id
-}
-#data "aws_subnet" "subnet_public_1a" {
-#   cidr_block = "10.0.103.0/24"
+#resource "aws_route_table_association" "priv1b_lab01" {
+#  subnet_id      = aws_subnet.subnet_private_1b.id
+#  route_table_id = aws_route_table.rtb_priv_lab01.id
 #}
 
 resource "aws_key_pair" "slacko-key-ssh" {
  key_name = "slacko-ssh-key"
- public_key = "ssh-rsa MIIEpAIBAAKCAQEAkZ5bLFbONyrKuXyg3jpepGgdxcJVHF2EW6zO/WwiQm9cKtzzTzrpMo2JrNpmCQ/sqmJ8+PeOyb6rH7+rt7V9CvMdTvsQx5HWDeTdaigUDeiK7S8vqi/FlhzS1vyzF5TIczs+zmh1aEchQ28K5QQ1qkOQm2aJ1bi042JQa5nEkrJgKR3A3sliNE6j0vawexnDhDjbqClFMikilhaOUhyGb/2rv/reJlgs4qWcB3HHzzjMoHqOp6RI2QSyXYMAkJJ93RfBLcAnhw8FonBF/ANrWAyxc4N0PoU1flo8kJ5vrSDkDnDmGBzqePLPnosgA9MNDdKwvCPh5tw2gVJgfcaY7QIDAQABAoIBAGPGloAeBnREbN2FaJB8fCa4dFXxnvGtnihWkwmP0zWkKgnwlQJfwjNySbhXePySnb3td+X7cioH7Cb35QgeYcxj4lwgqVGlOn8Qpym6xmr1QGPeJhG9Y+xEWa8XPPtWZbaXDKTPbEsEGeWjq1padQ7x9p6UNrNrOP5oeeQQW2GLrCLc50LRZye9qSgncmN6H5mayWFGLa8i3Gjvjz0X7wiyAiciqnLkPg5zqgOOUrUouoB7aL1azqn/o60HjuCqJiSqhgnwY4ldkGErKaXPhj1UeyS/qrYmEhDLwLaz1IFRl0VM052puJcxBPgpg0vSGa+PHrhjXqLdrGSZFjq2qr0CgYEA6LWLZkknYu2wc3X6d8qRC/oaG/FFzpOtMQawtkGvJ779Cc5Jw4d2tvOuKgCB3ZLY3uyKHJj+BD4AlEBojTwgFJzi1CvtIQQsucTeMUDY7xb/0yr6I87+zjFKWjHpHhmIJUy5XijHxVJ+YWQ8Pj0fW4qE3Z4ZJsLnFzFcAJDaJvMCgYEAoDFiPMJEaqnQp3H3hsgB7ffCEa0eoiwe2Z+FLN+DJwM6BlBSjni80jXafN524gMp2IXTMV1OxprU+QxUclBXk/aTVD+LuKTMVnzkKfebLlLDvtvJYOmQ4W7EVqHLLMDg6Od9naQnECd6PSisJAfJgJP/VqVr1yXTXZxKEip/+J8CgYEAioyEGXsWexz/AE9Ot4GgSBw47UgCAtMDu3u7PFfxG93nM65hVovRj22X1SQGLdCfVGJKfGpOWmI74AhU9znD8+HQXvhkL1MX+eaPT43HWto7qBMfaLB2HndUSE0M+UHEQEjk2H25Ku9JlVyjTX8Aq3TWVEgru1sxUSqvFxsm9ycCgYA/qEAsetprNH4o/B3r3nD92pWxJoVk1nmP61clpNBeYWbeeW7FFO+b7TCcrF67o5wuYcex9y1FuONm8GJiZtDWiIa1VOc2Aa79s3WLw8xT1SnaH0bgDxC2tKiq8HJnn2IAy3Tcfw3S2o013oLBcqK9SJKQIP5AqdRbf67jlyXxawKBgQDWC+XyRvbCeGoGW3JBpf3OmtUIPdzcJhXLvRcfVJh7uBHeGPMeBWBre9LvR95y4NbF7EdRPzXmT1sa1GYLHpIRtt8amp/jGfE2WOonqSWv0gsHUE9ae0/dGifn0xkoVG5ukw4ZlpBtxQO2THx9lryCDYYSEuta7r8M2addddBP1g== slacko"
+ public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCRnlssVs43Ksq5fKDeOl6kaB3FwlUcXYRbrM79bCJCb1wq3PNPOukyjYms2mYJD+yqYnz4947Jvqsfv6u3tX0K8x1O+xDHkdYN5N1qKBQN6IrtLy+qL8WWHNLW/LMXlMhzOz7OaHVoRyFDbwrlBDWqQ5CbZonVuLTjYlBrmcSSsmApHcDeyWI0TqPS9rB7GcOEONuoKUUyKSKWFo5SHIZv/au/+t4mWCzipZwHccfPOMygeo6npEjZBLJdgwCQkn3dF8EtwCeHDwWicEX8A2tYDLFzg3Q+hTV+WjyQnm+tIOQOcOYYHOp48s+eiyAD0w0N0rC8I+Hm3DaBUmB9xpjt slacko"
 }
 
 resource "aws_instance" "slacko-app" {
@@ -173,7 +171,7 @@ resource "aws_instance" "slacko-mongodb" {
 resource "aws_security_group" "allow-http-ssh" {
 name = "allow_http_ssh"
 description = "Security group allows SSH and HTTP"
-vpc_id = "vpc-0c07086c5f321dfd6"
+vpc_id = "vpc-039acd663a35661f4"
 
  ingress = [
     {
@@ -225,7 +223,7 @@ resource "aws_network_interface_sg_attachment" "slacko-sg" {
   network_interface_id = aws_instance.slacko-app.primary_network_interface_id
 }
 
-output "slacko-app-IP" {
+output "slacko-app-ip" {
   value = aws_instance.slacko-app.public_ip
 }
 
