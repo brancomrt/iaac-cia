@@ -171,7 +171,6 @@ resource "aws_instance" "slacko-mongodb" {
 resource "aws_security_group" "allow-http-ssh" {
 name = "allow_http_ssh"
 description = "Security group allows SSH and HTTP"
-#vpc_id = "vpc-039acd663a35661f4"
 vpc_id = aws_vpc.vpc_lab01.id
 
  ingress = [
