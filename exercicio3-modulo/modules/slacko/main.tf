@@ -47,7 +47,7 @@ resource "aws_route_table" "rtb_pub_lab01" {
 
 resource "aws_subnet" "subnet_public_1a" {
   vpc_id = var.vpc_id
-  cidr_block = var.cidr_block_1a
+  cidr_block = var.subnet_cidr
   availability_zone_id = data.aws_availability_zones.az-us-east-1a.zone_ids[0]
 
   tags = {

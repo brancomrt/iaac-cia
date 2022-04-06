@@ -1,8 +1,16 @@
+variable "subnet_cidr" {
+  type = string
+  default = "10.0.101.0/24"
+}
 variable "ami" {
   type = string
 }
 
 variable "vpc_id" {
+  type = string
+}
+
+variable "vpc_cidr" {
   type = string
 }
 
@@ -21,9 +29,3 @@ variable "shape_mongodb" {
 variable "subnet_id" {
   type = string
 }
-
-variable "cidr_block_1a" {
-  type = string
-}
-
-
