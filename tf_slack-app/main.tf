@@ -171,7 +171,8 @@ resource "aws_instance" "slacko-mongodb" {
 resource "aws_security_group" "allow-http-ssh" {
 name = "allow_http_ssh"
 description = "Security group allows SSH and HTTP"
-vpc_id = "vpc-039acd663a35661f4"
+#vpc_id = "vpc-039acd663a35661f4"
+vpc_id = aws_vpc.vpc_lab01.id
 
  ingress = [
     {
@@ -216,6 +217,69 @@ egress = [
  tags = {
       Name = "allow_ssh_http"
   }
+}
+
+resource "aws_security_group" "allow-mongodb"{
+    name = "allow_mongodb"
+    description = "Allow MongoDb"
+    vpc_id = aws_vpc.vpc_lab01.id
+
+    ingress = [
+        {
+            description = "Allow MOngoDB"
+            from_port = 27017
+            to_port = 27017
+            protocol = "tcp"
+            cidr_blocks = ["0.0.0.0/0"]
+            ipv6_cidr_blocks = ["::/0"]
+            prefix_list_ids = null
+            security_groups = null
+            self = null
+
+        }
+    ]
+    egress = [
+        {
+            description = "Allow all"
+            from_port = 0
+            to_port = 0
+            protocol = "all"
+            cidr_blocks = ["0.0.0.0/0"]
+            ipv6_cidr_blocks = ["::/0"]
+            prefix_list_ids = null
+            security_groups = null
+            self = null
+
+        }
+
+    ]
+
+    tags = {
+        Name = "allow_mongodb"
+    }
+
+
+}
+
+resource "aws_network_interface_sg_attachment" "mongo-sg" {
+    security_group_id = aws_security_group.allow-mongodb.id
+    network_interface_id = aws_instance.slacko-mongodb.primary_network_interface_id
+}
+
+resource "aws_route53_zone" "slack_zone" {
+    name = "iaac0506.com.br"
+    vpc{
+        vpc_id = aws_vpc.vpc_lab01.id
+    }
+    
+}
+
+resource "aws_route53_record" "mongodb" {
+    zone_id = aws_route53_zone.slack_zone.id
+    name = "mongodb.iaac0506.com.br"
+    type = "A"
+    ttl = "3600"
+    records = [aws_instance.slacko-mongodb.private_ip]
 }
 
 resource "aws_network_interface_sg_attachment" "slacko-sg" {
